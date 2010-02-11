@@ -60,5 +60,14 @@ Facter.add(:operatingsystemrelease) do
 end
 
 Facter.add(:operatingsystemrelease) do
+    confine :operatingsystem => %w{Gentoo}
+    if File.executable?('/usr/bin/eselect')
+        setcode do
+            %x{/usr/bin/eselect --brief --no-color profile show}.strip.chomp
+        end
+    end
+end
+
+Facter.add(:operatingsystemrelease) do
     setcode do Facter[:kernelrelease].value end
 end
